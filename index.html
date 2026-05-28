@@ -12,6 +12,7 @@
 </head>
 <body>
 
+  <!-- Fondo Streetwear -->
   <div class="bg-image"></div>
   <div class="bg-overlay"></div>
 
@@ -58,8 +59,9 @@
     <div class="grid" id="productGrid" style="display:none;"></div>
   </main>
 
+  <!-- Modal Producto Premium (Glassmorphism) -->
   <div id="modal" class="modal" onclick="closeModal()">
-    <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-content glass-panel" onclick="event.stopPropagation()">
       <span class="modal-close" onclick="closeModal()">×</span>
       
       <div class="modal-img-wrap">
@@ -72,6 +74,7 @@
       
       <div id="modalPrice" class="modal-price-display"></div>
       
+      <!-- Selectores de Variante -->
       <div class="variants-container" id="variantsContainer">
         <div class="variant-group" id="colorGroup" style="display:none;">
           <span class="variant-label">Color: <span id="selectedColorName" class="selected-val"></span></span>
@@ -91,8 +94,10 @@
     </div>
   </div>
 
+  <!-- Alertas -->
   <div id="toast" class="toast"></div>
 
+  <!-- Carrito Sidebar (Glassmorphism) -->
   <div id="sidebar" class="sidebar">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:15px;">
       <h2 style="font-family:'Montserrat', sans-serif; color:#fff; font-size:1.4rem; font-weight:900; letter-spacing:1px;">TU ORDEN</h2>
@@ -113,9 +118,25 @@
     <button class="checkout-btn" id="btnCheckout" style="display:none;" onclick="sendOrder()">PROCESAR PAGO ⚡</button>
   </div>
 
+  <!-- Botón Carrito -->
   <button class="cart-fab" onclick="toggleCart()" aria-label="Abrir carrito">
     🛒 <span id="cartBadge">0</span>
   </button>
+
+  <!-- NUEVO: Burbuja Flotante de Redes Sociales -->
+  <div class="social-bubble" id="socialBubble" onclick="toggleSocialMenu()" aria-label="Redes Sociales">
+    <img id="bubbleIcon" src="https://drive.google.com/thumbnail?id=1eKil-1X4fIxl99j4ySccZWsaPxEqJ6ui&sz=w100" alt="Social">
+  </div>
+
+  <!-- NUEVO: Menú emergente de redes (Glassmorphism) -->
+  <div id="socialMenu" class="social-menu" onclick="toggleSocialMenu()">
+    <div class="social-menu-content glass-panel" onclick="event.stopPropagation()">
+      <h3 style="color:var(--accent); margin-bottom:15px; font-family:'Montserrat',sans-serif; font-size: 1.2rem; font-weight:900; letter-spacing:1px;">NUESTRA COMUNIDAD</h3>
+      <a href="https://www.instagram.com/chilling_street_shop?igsh=OXBiNmt1Zzl4YWxt&utm_source=qr" target="_blank" class="social-link">📸 Instagram</a>
+      <a href="https://www.tiktok.com/@chillingstreetshop?_r=1&_t=ZS-96jBBjUu0U4" target="_blank" class="social-link">🎵 TikTok</a>
+      <button class="checkout-btn" style="margin-top:15px; padding: 12px; font-size: 0.8rem;" onclick="toggleSocialMenu()">Cerrar</button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
