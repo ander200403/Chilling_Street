@@ -4,9 +4,8 @@ const URL_CSV_VAR = "https://docs.google.com/spreadsheets/d/1l0uryei0Z3M5b28ECbD
 const WHATSAPP = "584125713381";
 
 let products = [];
-let variantsByProduct = {}; // Diccionario relacional
+let variantsByProduct = {}; 
 
-// Estado de la ventana emergente
 let currentModalProduct = null;
 let selectedColorData = null;
 let selectedSize = null;
@@ -16,14 +15,14 @@ let cart = (function() {
   catch(e) { return []; }
 })();
 
-// Utilidades
+// Utilidades para saltar bloqueos de Google Drive
 function getStableImageUrl(rawImg) {
   if (!rawImg) return '';
   if (rawImg.indexOf('drive.google.com') !== -1) {
     const matchD = rawImg.match(/\/d\/([a-zA-Z0-9_-]+)/);
     const matchId = rawImg.match(/[?&]id=([a-zA-Z0-9_-]+)/);
     const driveId = (matchD && matchD[1]) || (matchId && matchId[1]);
-    if (driveId) return 'https://drive.google.com/thumbnail?id=' + driveId + '&sz=w600';
+    if (driveId) return 'https://lh3.googleusercontent.com/d/' + driveId;
   }
   return rawImg;
 }
@@ -36,12 +35,10 @@ function showToast(msg) {
   setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
-// ── Carga Dual de Datos (Promesas Simultáneas) ──
+// ── Carga Dual de Datos ──
 async function loadData() {
   try {
     const tstamp = new Date().getTime();
-    
-    // Ejecutar ambas peticiones al mismo tiempo
     const [resProd, resVar] = await Promise.all([
       fetch(URL_CSV_PROD + "&t=" + tstamp),
       fetch(URL_CSV_VAR + "&t=" + tstamp)
@@ -50,7 +47,6 @@ async function loadData() {
     const rawProd = await resProd.text();
     const rawVar = await resVar.text();
 
-    // 1. Procesar Variantes Primero
     Papa.parse(rawVar, {
       header: false,
       skipEmptyLines: true,
@@ -76,7 +72,6 @@ async function loadData() {
       }
     });
 
-    // 2. Procesar Productos Principales
     Papa.parse(rawProd, {
       header: false,
       skipEmptyLines: true,
@@ -115,7 +110,7 @@ async function loadData() {
             carouselRank: carouselMatch ? parseInt(carouselMatch[0], 10) : null,
             discountPercent: discountPercent,
             originalPrice: originalPrice,
-            variants: variantsByProduct[idProd] || [] // Enlazar variantes
+            variants: variantsByProduct[idProd] || [] 
           };
         }).filter(p => p.title !== 'Sin título');
 
@@ -198,7 +193,6 @@ function renderGrid(lista) {
     `;
   }).join('');
 
-  // Lazy Load
   const imgs = document.querySelectorAll('.card-img[data-src]');
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -237,7 +231,6 @@ function openModal(idStr) {
   const p = products.find(x => String(x.id) === String(idStr));
   if(!p) return;
   
-  // Reiniciar estado
   currentModalProduct = p;
   selectedColorData = null;
   selectedSize = null;
@@ -254,7 +247,6 @@ function openModal(idStr) {
     mpEl.innerText = `$${p.price.toFixed(2)}`;
   }
 
-  // Configurar Opciones de Variante
   const cGroup = document.getElementById('colorGroup');
   const sGroup = document.getElementById('sizeGroup');
   const cOpts = document.getElementById('colorOptions');
@@ -266,26 +258,20 @@ function openModal(idStr) {
   btnAdd.disabled = true;
 
   if (p.variants && p.variants.length > 0) {
-    // Producto CON variantes (Hoja 2)
     cGroup.style.display = 'block';
     
-    // Generar botones de colores
     cOpts.innerHTML = p.variants.map((v, i) => {
-      // Intentamos pintar el botón del color exacto basado en el nombre, o gris por defecto
       const hex = v.color.toLowerCase() === 'negro' ? '#111' : (v.color.toLowerCase() === 'blanco' ? '#fff' : '#666');
       return `<button class="color-btn" style="background-color:${hex}; border: 2px solid rgba(255,255,255,0.3);" title="${v.color}" onclick="selectColor(${i})"></button>`;
     }).join('');
     
-    // Auto-seleccionar el primer color
     selectColor(0);
   } else {
-    // Producto SIN variantes de color, usar tallas globales (Col 6)
     cGroup.style.display = 'none';
     if(p.globalSizes && p.globalSizes.length > 0) {
       sGroup.style.display = 'block';
       renderSizes(p.globalSizes);
     } else {
-      // Talla única o sin especificación
       sGroup.style.display = 'none';
       selectedSize = 'Única';
       btnAdd.innerText = "AÑADIR AL CARRITO";
@@ -302,21 +288,18 @@ function selectColor(index) {
   if(!variants || !variants[index]) return;
   
   selectedColorData = variants[index];
-  selectedSize = null; // resetear talla al cambiar color
+  selectedSize = null;
   
-  // Actualizar UI Color
   document.getElementById('selectedColorName').innerText = selectedColorData.color;
   const btns = document.getElementById('colorOptions').querySelectorAll('.color-btn');
   btns.forEach((b, i) => b.classList.toggle('active', i === index));
   
-  // Cambiar foto si la variante tiene
   if(selectedColorData.imgColor) {
     document.getElementById('modalImg').src = selectedColorData.imgColor;
   } else {
     document.getElementById('modalImg').src = currentModalProduct.img;
   }
 
-  // Renderizar tallas de este color
   document.getElementById('sizeGroup').style.display = 'block';
   renderSizes(selectedColorData.tallas);
   
@@ -367,7 +350,6 @@ function addToCartFromModal() {
   const sizeStr = selectedSize || 'Única';
   const imgToSave = (selectedColorData && selectedColorData.imgColor) ? selectedColorData.imgColor : currentModalProduct.img;
   
-  // Identificador único para el carrito que combina ID, color y talla
   const cartKey = `${currentModalProduct.id}_${colorStr}_${sizeStr}`;
   
   const exists = cart.find(x => x.cartKey === cartKey);
@@ -393,11 +375,6 @@ function addToCartFromModal() {
   document.getElementById('sidebar').classList.add('open');
 }
 
-function changeQty(index, delta) {
-  cart[index].qty += delta;
-  if (cart[index].qty <= 0) cart.splice(index, 1);
-  updateCartUI();
-}
 function removeFromCart(index) {
   cart.splice(index, 1);
   updateCartUI();
@@ -480,10 +457,10 @@ function sendOrder() {
   window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg));
 }
 
-/* ── NUEVO: Redes Sociales Animación (IG y TikTok) ── */
+/* ── Redes Sociales Animación (IG y TikTok) ── */
 const socialIcons = [
-  "https://drive.google.com/thumbnail?id=1eKil-1X4fIxl99j4ySccZWsaPxEqJ6ui&sz=w100", // Instagram
-  "https://drive.google.com/thumbnail?id=1jnHS-gKM1FzcwFXwijIN8zfPGRGHcFE5&sz=w100"  // TikTok
+  "https://lh3.googleusercontent.com/d/1eKil-1X4fIxl99j4ySccZWsaPxEqJ6ui", // Instagram
+  "https://lh3.googleusercontent.com/d/1jnHS-gKM1FzcwFXwijIN8zfPGRGHcFE5"  // TikTok
 ];
 let currentIconIndex = 0;
 
