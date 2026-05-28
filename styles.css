@@ -11,7 +11,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: var(--bg-dark); color: var(--text-main); font-family: 'Jost', sans-serif; min-height: 100vh; overflow-x: hidden; position: relative; }
 
-/* ── Fondo Inmersivo (ACTUALIZADO) ── */
+/* ── Fondo Inmersivo (Enlace Corregido) ── */
 .bg-image { position: fixed; inset: 0; z-index: 0; background-image: url('https://lh3.googleusercontent.com/d/1MY966sjnQvOrmSNxofFBjMbE6vviQKQi'); background-size: cover; background-position: center; }
 .bg-overlay { position: fixed; inset: 0; z-index: 0; background: linear-gradient(180deg, rgba(5,5,5,0.4) 0%, rgba(5,5,5,0.85) 100%); }
 
@@ -79,7 +79,7 @@ main { position: relative; z-index: 1; padding: 1rem 1rem 6rem; }
 .badge-agotado { position: absolute; top: 10px; left: 10px; background: var(--error); color: white; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 4px 8px; z-index: 10; border-radius: 4px; }
 .card.out-of-stock .card-img { filter: grayscale(100%) opacity(0.6); }
 
-/* ── Modal Detalles ── */
+/* ── Modal Detalles (Glassmorphism) ── */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; display: none; align-items: flex-end; justify-content: center; padding: 0; backdrop-filter: blur(5px); }
 @media(min-width: 768px) { .modal { align-items: center; padding: 20px; } }
 .modal-content { width: 100%; max-width: 500px; padding: 25px; position: relative; max-height: 90vh; overflow-y: auto; border-radius: 16px 16px 0 0; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -114,7 +114,7 @@ main { position: relative; z-index: 1; padding: 1rem 1rem 6rem; }
 .modal-btn-add:hover { background: #d0d0d0; }
 .modal-btn-add:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
 
-/* ── Sidebar Carrito ── */
+/* ── Sidebar Carrito (Glassmorphism) ── */
 .sidebar { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background: rgba(10, 10, 10, 0.65); z-index: 3000; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); padding: 20px; display: flex; flex-direction: column; border-left: 1px solid var(--border); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); }
 .sidebar.open { right: 0; }
 .cart-list { flex: 1; overflow-y: auto; margin: 10px 0; padding-right: 5px; }
@@ -187,7 +187,7 @@ main { position: relative; z-index: 1; padding: 1rem 1rem 6rem; }
   transition: opacity 0.3s ease;
 }
 
-/* ── Menú Redes ── */
+/* ── Menú Redes (Glassmorphism) ── */
 .social-menu {
   position: fixed;
   inset: 0;
