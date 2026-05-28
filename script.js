@@ -15,7 +15,7 @@ let cart = (function() {
   catch(e) { return []; }
 })();
 
-// Utilidades para saltar bloqueos de Google Drive
+// Utilidades: Enlaces estables y sin bloqueos
 function getStableImageUrl(rawImg) {
   if (!rawImg) return '';
   if (rawImg.indexOf('drive.google.com') !== -1) {
@@ -457,7 +457,7 @@ function sendOrder() {
   window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg));
 }
 
-/* ── Redes Sociales Animación (IG y TikTok) ── */
+/* ── Enlaces Corregidos Redes Sociales Animación (IG y TikTok) ── */
 const socialIcons = [
   "https://lh3.googleusercontent.com/d/1eKil-1X4fIxl99j4ySccZWsaPxEqJ6ui", // Instagram
   "https://lh3.googleusercontent.com/d/1jnHS-gKM1FzcwFXwijIN8zfPGRGHcFE5"  // TikTok
