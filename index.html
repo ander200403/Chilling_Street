@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chilling Street — Oficial</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="bg-image"></div>
+  <div class="bg-overlay"></div>
+
+  <header>
+    <div class="logo-wrap">
+      <img src="https://drive.google.com/thumbnail?id=1fPhQYMIdQGYn0HEzKTy4Kb44C_j9DhuJ&sz=w300" class="logo-img" alt="Chilling Street Logo" onerror="this.style.display='none'">
+    </div>
+    <p class="welcome-text">STREETWEAR CULTURE & PREMIUM GARMENTS.</p>
+  </header>
+
+  <div class="top-carousel-section" id="topCarouselSection" style="display:none;">
+    <h2 class="carousel-title">LATEST DROPS</h2>
+    <div class="carousel-track" id="carouselTrack"></div>
+  </div>
+
+  <div class="controls">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Buscar prenda o colección...">
+    </div>
+    <select id="genreFilter" class="genre-filter" onchange="applyFilters()">
+      <option value="">Todas las categorías</option>
+    </select>
+    <select id="sortSelect" class="sort-select" onchange="applyFilters()">
+      <option value="">Ordenar</option>
+      <option value="price-asc">Precio: menor a mayor</option>
+      <option value="price-desc">Precio: mayor a menor</option>
+    </select>
+  </div>
+
+  <div class="results-bar">
+    <span class="results-count" id="resultsCount"></span>
+  </div>
+
+  <div class="favs-section" id="favsSection">
+    <div class="favs-header">
+      <span class="favs-title">WISHLIST</span>
+      <button class="favs-clear" onclick="clearFavs()">Limpiar</button>
+    </div>
+    <div class="favs-grid" id="favsGrid"></div>
+  </div>
+
+  <main>
+    <div class="grid" id="skeletonGrid"></div>
+    <div class="grid" id="productGrid" style="display:none;"></div>
+  </main>
+
+  <div id="modal" class="modal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <span class="modal-close" onclick="closeModal()">×</span>
+      
+      <div class="modal-img-wrap">
+        <span id="modalCover" class="cover-badge" style="display:none;"></span>
+        <img id="modalImg" src="" class="modal-img" alt="Prenda">
+      </div>
+
+      <h2 id="modalTitle" class="modal-title-text"></h2>
+      <p id="modalAuthor" class="modal-brand-text"></p>
+      
+      <div id="modalPrice" class="modal-price-display"></div>
+      
+      <div class="variants-container" id="variantsContainer">
+        <div class="variant-group" id="colorGroup" style="display:none;">
+          <span class="variant-label">Color: <span id="selectedColorName" class="selected-val"></span></span>
+          <div class="color-options" id="colorOptions"></div>
+        </div>
+        
+        <div class="variant-group" id="sizeGroup" style="display:none;">
+          <span class="variant-label">Talla: <span id="selectedSizeName" class="selected-val">Selecciona una</span></span>
+          <div class="size-options" id="sizeOptions"></div>
+        </div>
+      </div>
+
+      <div id="modalGenres" class="modal-genres"></div>
+      <p id="modalDesc" class="modal-description"></p>
+      
+      <button class="modal-btn-add" id="btnAddToCart" onclick="addToCartFromModal()">AÑADIR AL CARRITO</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <div id="sidebar" class="sidebar">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:15px;">
+      <h2 style="font-family:'Montserrat', sans-serif; color:#fff; font-size:1.4rem; font-weight:900; letter-spacing:1px;">TU ORDEN</h2>
+      <span onclick="toggleCart()" style="cursor:pointer; font-size:2rem; color:var(--muted); line-height:1;">×</span>
+    </div>
+    
+    <div id="cartList" class="cart-list"></div>
+    
+    <div class="cart-notes-wrap" id="cartNotesWrap" style="display:none;">
+      <label class="cart-notes-label">INSTRUCCIONES ADICIONALES</label>
+      <textarea id="cartNotes" class="cart-notes" placeholder="Ej: Entregar por la tarde..."></textarea>
+    </div>
+
+    <div class="cart-total-row" id="cartTotalRow" style="display:none;">
+      <span class="cart-total-label">TOTAL</span>
+      <span class="cart-total-amount" id="cartTotal"></span>
+    </div>
+    <button class="checkout-btn" id="btnCheckout" style="display:none;" onclick="sendOrder()">PROCESAR PAGO ⚡</button>
+  </div>
+
+  <button class="cart-fab" onclick="toggleCart()" aria-label="Abrir carrito">
+    🛒 <span id="cartBadge">0</span>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
