@@ -15,10 +15,6 @@ let cart = (function() {
   try { return JSON.parse(localStorage.getItem('cs_cart')) || []; }
   catch(e) { return []; }
 })();
-let favs = (function() {
-  try { return JSON.parse(localStorage.getItem('cs_favs')) || []; }
-  catch(e) { return []; }
-})();
 
 // Utilidades
 function getStableImageUrl(rawImg) {
@@ -253,7 +249,7 @@ function openModal(idStr) {
   
   const mpEl = document.getElementById('modalPrice');
   if (p.originalPrice) {
-    mpEl.innerHTML = `<span class="price-original" style="font-size:1rem;">$${p.originalPrice.toFixed(2)}</span> $${p.price.toFixed(2)}`;
+    mpEl.innerHTML = `<span class="price-original" style="font-size:1rem;">$${p.originalPrice.toFixed(2)}</span> $${p.price.toFixed(2)} <span class="discount-tag" style="font-size:0.75rem;">-${p.discountPercent}%</span>`;
   } else {
     mpEl.innerText = `$${p.price.toFixed(2)}`;
   }
@@ -277,7 +273,7 @@ function openModal(idStr) {
     cOpts.innerHTML = p.variants.map((v, i) => {
       // Intentamos pintar el botón del color exacto basado en el nombre, o gris por defecto
       const hex = v.color.toLowerCase() === 'negro' ? '#111' : (v.color.toLowerCase() === 'blanco' ? '#fff' : '#666');
-      return `<button class="color-btn" style="background-color:${hex};" title="${v.color}" onclick="selectColor(${i})"></button>`;
+      return `<button class="color-btn" style="background-color:${hex}; border: 2px solid rgba(255,255,255,0.3);" title="${v.color}" onclick="selectColor(${i})"></button>`;
     }).join('');
     
     // Auto-seleccionar el primer color
@@ -482,6 +478,32 @@ function sendOrder() {
   if (notes) msg += `\n\n📝 *Instrucciones:* ${notes}`;
   
   window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg));
+}
+
+/* ── NUEVO: Redes Sociales Animación (IG y TikTok) ── */
+const socialIcons = [
+  "https://drive.google.com/thumbnail?id=1eKil-1X4fIxl99j4ySccZWsaPxEqJ6ui&sz=w100", // Instagram
+  "https://drive.google.com/thumbnail?id=1jnHS-gKM1FzcwFXwijIN8zfPGRGHcFE5&sz=w100"  // TikTok
+];
+let currentIconIndex = 0;
+
+setInterval(() => {
+  const iconEl = document.getElementById('bubbleIcon');
+  if(!iconEl) return;
+  iconEl.style.opacity = 0;
+  setTimeout(() => {
+    currentIconIndex = (currentIconIndex + 1) % socialIcons.length;
+    iconEl.src = socialIcons[currentIconIndex];
+    iconEl.style.opacity = 1;
+  }, 300); 
+}, 4000);
+
+function toggleSocialMenu() {
+  const menu = document.getElementById('socialMenu');
+  if(menu) {
+    const isHidden = (menu.style.display === 'none' || menu.style.display === '');
+    menu.style.display = isHidden ? 'flex' : 'none';
+  }
 }
 
 // Arranque
