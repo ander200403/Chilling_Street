@@ -163,6 +163,11 @@ function applyFilters() {
 function renderGrid(lista) {
   const grid = document.getElementById('productGrid');
   if (!grid) return;
+
+  grid.style.display = 'grid';
+  const skeleton = document.getElementById('skeletonGrid');
+  if (skeleton) skeleton.style.display = 'none';
+
   if (lista.length === 0) {
     grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">No items found.</div>';
     return;
