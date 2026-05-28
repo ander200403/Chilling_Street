@@ -12,13 +12,11 @@
 </head>
 <body>
 
-  <!-- Fondo Streetwear -->
   <div class="bg-image"></div>
   <div class="bg-overlay"></div>
 
   <header>
     <div class="logo-wrap">
-      <!-- ACTUALIZADO: Nuevo servidor de imágenes Google Drive -->
       <img src="https://lh3.googleusercontent.com/d/1fPhQYMIdQGYn0HEzKTy4Kb44C_j9DhuJ" class="logo-img" alt="Chilling Street Logo" onerror="this.style.display='none'">
     </div>
     <p class="welcome-text">STREETWEAR CULTURE & PREMIUM GARMENTS.</p>
@@ -60,7 +58,6 @@
     <div class="grid" id="productGrid" style="display:none;"></div>
   </main>
 
-  <!-- Modal Producto Premium (Glassmorphism) -->
   <div id="modal" class="modal" onclick="closeModal()">
     <div class="modal-content glass-panel" onclick="event.stopPropagation()">
       <span class="modal-close" onclick="closeModal()">×</span>
@@ -75,7 +72,6 @@
       
       <div id="modalPrice" class="modal-price-display"></div>
       
-      <!-- Selectores de Variante -->
       <div class="variants-container" id="variantsContainer">
         <div class="variant-group" id="colorGroup" style="display:none;">
           <span class="variant-label">Color: <span id="selectedColorName" class="selected-val"></span></span>
@@ -95,10 +91,8 @@
     </div>
   </div>
 
-  <!-- Alertas -->
   <div id="toast" class="toast"></div>
 
-  <!-- Carrito Sidebar (Glassmorphism) -->
   <div id="sidebar" class="sidebar">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:15px;">
       <h2 style="font-family:'Montserrat', sans-serif; color:#fff; font-size:1.4rem; font-weight:900; letter-spacing:1px;">TU ORDEN</h2>
@@ -119,18 +113,14 @@
     <button class="checkout-btn" id="btnCheckout" style="display:none;" onclick="sendOrder()">PROCESAR PAGO ⚡</button>
   </div>
 
-  <!-- Botón Carrito -->
   <button class="cart-fab" onclick="toggleCart()" aria-label="Abrir carrito">
     🛒 <span id="cartBadge">0</span>
   </button>
 
-  <!-- Burbuja Flotante de Redes Sociales -->
   <div class="social-bubble" id="socialBubble" onclick="toggleSocialMenu()" aria-label="Redes Sociales">
-    <!-- ACTUALIZADO: Nuevo servidor de imágenes Google Drive -->
     <img id="bubbleIcon" src="https://lh3.googleusercontent.com/d/1eKil-1X4fIxl99j4ySccZWsaPxEqJ6ui" alt="Social">
   </div>
 
-  <!-- Menú emergente de redes (Glassmorphism) -->
   <div id="socialMenu" class="social-menu" onclick="toggleSocialMenu()">
     <div class="social-menu-content glass-panel" onclick="event.stopPropagation()">
       <h3 style="color:var(--accent); margin-bottom:15px; font-family:'Montserrat',sans-serif; font-size: 1.2rem; font-weight:900; letter-spacing:1px;">NUESTRA COMUNIDAD</h3>
