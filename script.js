@@ -1,7 +1,7 @@
 // Configuración y Estado
 const URL_CSV_PROD = "https://docs.google.com/spreadsheets/d/1l0uryei0Z3M5b28ECbDTI8X1UbyH5l2JvZaGlUg7mGM/export?format=csv&gid=0";
 const URL_CSV_VAR = "https://docs.google.com/spreadsheets/d/1l0uryei0Z3M5b28ECbDTI8X1UbyH5l2JvZaGlUg7mGM/export?format=csv&gid=129169326";
-const WHATSAPP = "584125713381";
+const WHATSAPP = "584242193836";
 
 let products = [];
 let variantsByProduct = {}; 
