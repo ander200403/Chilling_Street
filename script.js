@@ -561,7 +561,7 @@ function selectCheckoutMethod(method) {
   } else if (method === 'agencia') {
     titleEl.innerText = '📦 DATOS PARA ENVÍO POR AGENCIA';
     document.getElementById('formAgencia').style.display = 'block';
-    ['ag_nombre','ag_apellido','ag_cedula','ag_agencia','ag_ciudad','ag_telefono'].forEach(id => {
+    ['ag_nombre','ag_apellido','ag_cedula','ag_agencia','ag_codigo','ag_ciudad','ag_telefono'].forEach(id => {
       const el = document.getElementById(id); if(el) el.value = '';
     });
   }
@@ -590,13 +590,14 @@ function submitCheckoutForm() {
     const apellido = document.getElementById('ag_apellido')?.value.trim() || '';
     const cedula = document.getElementById('ag_cedula')?.value.trim() || '';
     const agencia = document.getElementById('ag_agencia')?.value.trim() || '';
+    const codigo = document.getElementById('ag_codigo')?.value.trim() || '';
     const ciudad = document.getElementById('ag_ciudad')?.value.trim() || '';
     const telefono = document.getElementById('ag_telefono')?.value.trim() || '';
-    if (!nombre || !apellido || !cedula || !agencia || !ciudad || !telefono) {
+    if (!nombre || !apellido || !cedula || !agencia || !codigo || !ciudad || !telefono) {
       showToast("⚠️ Completa todos los campos requeridos");
       return;
     }
-    contactInfo = `📋 *Tipo de entrega:* Envío por Agencia\n👤 *Nombre:* ${nombre} ${apellido}\n🪪 *Cédula:* ${cedula}\n🚚 *Agencia:* ${agencia}\n🏙️ *Ciudad destino:* ${ciudad}\n📞 *Teléfono:* ${telefono}`;
+    contactInfo = `📋 *Tipo de entrega:* Envío por Agencia\n👤 *Nombre:* ${nombre} ${apellido}\n🪪 *Cédula:* ${cedula}\n🚚 *Agencia:* ${agencia}\n🔢 *Código de agencia:* ${codigo}\n🏙️ *Ciudad destino:* ${ciudad}\n📞 *Teléfono:* ${telefono}`;
   }
 
   closeCheckoutModal();
