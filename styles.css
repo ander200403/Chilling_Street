@@ -228,3 +228,158 @@ main { position: relative; z-index: 1; padding: 1rem 1rem 6rem; }
   border-color: rgba(255,255,255,0.4);
   transform: translateY(-2px);
 }
+
+/* ── Botón Compartir Modal ── */
+.modal-btn-share {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  padding: 16px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+.modal-btn-share:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.45);
+  transform: translateY(-2px);
+}
+.modal-btn-share:active { transform: scale(0.93); }
+
+/* ── Modal Checkout ── */
+.checkout-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 4000;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+  backdrop-filter: blur(8px);
+}
+@media(min-width: 768px) {
+  .checkout-modal { align-items: center; padding: 20px; }
+}
+.checkout-modal-content {
+  width: 100%;
+  max-width: 480px;
+  padding: 28px 24px 24px;
+  position: relative;
+  max-height: 92vh;
+  overflow-y: auto;
+  border-radius: 16px 16px 0 0;
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media(min-width: 768px) {
+  .checkout-modal-content { border-radius: 12px; animation: pop 0.3s ease; }
+}
+.checkout-modal-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-align: center;
+  margin-bottom: 24px;
+  padding-right: 20px;
+  color: var(--text-main);
+}
+.checkout-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.checkout-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  text-align: left;
+  width: 100%;
+  color: var(--text-main);
+}
+.checkout-option-btn:hover {
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(255,255,255,0.4);
+  transform: translateX(3px);
+}
+.checkout-option-btn:active { transform: scale(0.98); }
+.checkout-option-wa {
+  border-color: rgba(37, 211, 102, 0.35);
+  background: rgba(37, 211, 102, 0.06);
+}
+.checkout-option-wa:hover {
+  border-color: rgba(37, 211, 102, 0.7);
+  background: rgba(37, 211, 102, 0.12);
+}
+.checkout-option-icon { font-size: 1.5rem; flex-shrink: 0; }
+.checkout-option-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  display: block;
+}
+.checkout-option-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 2px;
+}
+.checkout-back-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 14px;
+  font-family: 'Jost', sans-serif;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s;
+}
+.checkout-back-btn:hover { color: var(--text-main); }
+.checkout-form-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin-bottom: 18px;
+  color: var(--text-main);
+}
+.checkout-field { margin-bottom: 12px; }
+.checkout-label {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+.checkout-input {
+  width: 100%;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  color: var(--text-main);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.checkout-input:focus { border-color: rgba(255,255,255,0.5); }
+.checkout-input::placeholder { color: rgba(170,170,170,0.5); }
