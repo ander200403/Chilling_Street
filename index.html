@@ -140,7 +140,107 @@
       <div id="modalGenres" class="modal-genres"></div>
       <p id="modalDesc" class="modal-description"></p>
       
-      <button class="modal-btn-add" id="btnAddToCart" onclick="addToCartFromModal()">AÑADIR AL CARRITO</button>
+      <div style="display:flex; gap:10px; margin-top:0;">
+        <button class="modal-btn-add" id="btnAddToCart" onclick="addToCartFromModal()" style="flex:1;">AÑADIR AL CARRITO</button>
+        <button class="modal-btn-share" id="btnShare" onclick="shareProduct()" title="Compartir prenda">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Modal Checkout ── -->
+  <div id="checkoutModal" class="checkout-modal" onclick="closeCheckoutModal()">
+    <div class="checkout-modal-content glass-panel" onclick="event.stopPropagation()">
+      <span class="modal-close" onclick="closeCheckoutModal()">×</span>
+      <h2 class="checkout-modal-title">¿CÓMO DESEAS RECIBIR TU ORDEN?</h2>
+      
+      <!-- PASO 1: Opciones -->
+      <div id="checkoutStep1">
+        <div class="checkout-options">
+          <button class="checkout-option-btn" onclick="selectCheckoutMethod('personal')">
+            <span class="checkout-option-icon">🤝</span>
+            <span class="checkout-option-label">ENTREGA PERSONAL</span>
+            <span class="checkout-option-sub">Coordinar punto de encuentro</span>
+          </button>
+          <button class="checkout-option-btn" onclick="selectCheckoutMethod('delivery')">
+            <span class="checkout-option-icon">🛵</span>
+            <span class="checkout-option-label">DELIVERY CHILLING STREET</span>
+            <span class="checkout-option-sub">Llevamos tu pedido a domicilio</span>
+          </button>
+          <button class="checkout-option-btn" onclick="selectCheckoutMethod('agencia')">
+            <span class="checkout-option-icon">📦</span>
+            <span class="checkout-option-label">ENVÍO POR AGENCIA</span>
+            <span class="checkout-option-sub">Enviamos por agencia de transporte</span>
+          </button>
+          <button class="checkout-option-btn checkout-option-wa" onclick="selectCheckoutMethod('whatsapp')">
+            <span class="checkout-option-icon">💬</span>
+            <span class="checkout-option-label">IR A WHATSAPP</span>
+            <span class="checkout-option-sub">Continuar directo al chat</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- PASO 2: Formulario -->
+      <div id="checkoutStep2" style="display:none;">
+        <button class="checkout-back-btn" onclick="backToCheckoutStep1()">← Volver</button>
+        <h3 id="checkoutFormTitle" class="checkout-form-title"></h3>
+
+        <!-- Formulario Entrega Personal / Delivery -->
+        <div id="formPersonalDelivery" style="display:none;">
+          <div class="checkout-field">
+            <label class="checkout-label">NOMBRE</label>
+            <input type="text" id="pd_nombre" class="checkout-input" placeholder="Tu nombre">
+          </div>
+          <div class="checkout-field">
+            <label class="checkout-label">APELLIDO</label>
+            <input type="text" id="pd_apellido" class="checkout-input" placeholder="Tu apellido">
+          </div>
+          <div class="checkout-field">
+            <label class="checkout-label">DIRECCIÓN</label>
+            <input type="text" id="pd_direccion" class="checkout-input" placeholder="Dirección de entrega">
+          </div>
+          <div class="checkout-field" id="pd_phone_wrap">
+            <label class="checkout-label">TELÉFONO</label>
+            <input type="tel" id="pd_telefono" class="checkout-input" placeholder="Número de contacto">
+          </div>
+        </div>
+
+        <!-- Formulario Agencia -->
+        <div id="formAgencia" style="display:none;">
+          <div class="checkout-field">
+            <label class="checkout-label">NOMBRE</label>
+            <input type="text" id="ag_nombre" class="checkout-input" placeholder="Tu nombre">
+          </div>
+          <div class="checkout-field">
+            <label class="checkout-label">APELLIDO</label>
+            <input type="text" id="ag_apellido" class="checkout-input" placeholder="Tu apellido">
+          </div>
+          <div class="checkout-field">
+            <label class="checkout-label">CÉDULA / DNI</label>
+            <input type="text" id="ag_cedula" class="checkout-input" placeholder="Número de cédula">
+          </div>
+          <div class="checkout-field">
+            <label class="checkout-label">AGENCIA DE TRANSPORTE</label>
+            <input type="text" id="ag_agencia" class="checkout-input" placeholder="Ej: MRW, Zoom, Tealca...">
+          </div>
+          <div class="checkout-field">
+            <label class="checkout-label">CIUDAD / DESTINO</label>
+            <input type="text" id="ag_ciudad" class="checkout-input" placeholder="Ciudad de destino">
+          </div>
+          <div class="checkout-field">
+            <label class="checkout-label">TELÉFONO</label>
+            <input type="tel" id="ag_telefono" class="checkout-input" placeholder="Número de contacto">
+          </div>
+        </div>
+
+        <div class="checkout-field" style="margin-top: 8px;">
+          <label class="checkout-label">INSTRUCCIONES ADICIONALES (opcional)</label>
+          <textarea id="checkoutNotes" class="checkout-input" style="min-height:65px; resize:none;" placeholder="Ej: Entregar en horario de tarde..."></textarea>
+        </div>
+
+        <button class="checkout-btn" style="margin-top:10px; font-size:0.85rem;" onclick="submitCheckoutForm()">ENVIAR PEDIDO POR WHATSAPP ⚡</button>
+      </div>
     </div>
   </div>
 
