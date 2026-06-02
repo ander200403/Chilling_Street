@@ -440,26 +440,12 @@ function updateCartUI() {
   document.getElementById('cartTotal').innerText = `$${totalMoney.toFixed(2)}`;
 }
 
-// ── Procesar Pago (WhatsApp) ──
+// ── Procesar Pago → abre modal de checkout ──
 function sendOrder() {
   if (cart.length === 0) return;
-  
-  const notes = document.getElementById('cartNotes')?.value.trim() || '';
-  const total = cart.reduce((acc, p) => acc + (p.price * p.qty), 0);
-  
-  let msg = `⚡ *NUEVA ORDEN CHILLING STREET* ⚡\n\n`;
-  msg += cart.map(c => {
-    let spec = [];
-    if(c.color) spec.push(`Color: ${c.color}`);
-    if(c.size && c.size !== 'Única') spec.push(`Talla: ${c.size}`);
-    const specStr = spec.length ? ` (${spec.join(', ')})` : '';
-    return `• ${c.title}${specStr} x${c.qty} — $${(c.price * c.qty).toFixed(2)}`;
-  }).join('\n');
-  
-  msg += `\n\n*TOTAL: $${total.toFixed(2)}*`;
-  if (notes) msg += `\n\n📝 *Instrucciones:* ${notes}`;
-  
-  window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg));
+  // Cierra el sidebar antes de abrir el modal de checkout
+  document.getElementById('sidebar').classList.remove('open');
+  setTimeout(() => openCheckoutModal('cart'), 220);
 }
 
 /* ── Enlaces Corregidos Redes Sociales Animación (IG y TikTok) ── */
@@ -490,3 +476,165 @@ function toggleSocialMenu() {
 
 // Arranque
 loadData();
+
+// ── Compartir Producto ──
+function shareProduct() {
+  if (!currentModalProduct) return;
+  const p = currentModalProduct;
+  const shareData = {
+    title: `${p.brand} — ${p.title}`,
+    text: `👕 *${p.title}*\n💰 $${p.price.toFixed(2)}\n\n¡Míralo en Chilling Street!`,
+    url: window.location.href
+  };
+  if (navigator.share) {
+    navigator.share(shareData).catch(() => {});
+  } else {
+    // Fallback: copiar al portapapeles
+    const text = `${shareData.text}\n${shareData.url}`;
+    navigator.clipboard.writeText(text).then(() => {
+      showToast("🔗 ENLACE COPIADO AL PORTAPAPELES");
+    }).catch(() => {
+      showToast("🔗 " + shareData.url);
+    });
+  }
+}
+
+// ── Checkout Modal ──
+let checkoutMethod = null;
+let checkoutSource = null; // 'cart' | 'direct'
+
+function openCheckoutModal(source) {
+  checkoutSource = source || 'cart';
+  checkoutMethod = null;
+  // Reset steps
+  document.getElementById('checkoutStep1').style.display = 'block';
+  document.getElementById('checkoutStep2').style.display = 'none';
+  document.getElementById('checkoutModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCheckoutModal() {
+  document.getElementById('checkoutModal').style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+function backToCheckoutStep1() {
+  document.getElementById('checkoutStep1').style.display = 'block';
+  document.getElementById('checkoutStep2').style.display = 'none';
+  checkoutMethod = null;
+}
+
+function selectCheckoutMethod(method) {
+  checkoutMethod = method;
+
+  if (method === 'whatsapp') {
+    closeCheckoutModal();
+    _dispatchOrder(null);
+    return;
+  }
+
+  // Show step 2 form
+  document.getElementById('checkoutStep1').style.display = 'none';
+  document.getElementById('checkoutStep2').style.display = 'block';
+
+  // Hide all forms first
+  document.getElementById('formPersonalDelivery').style.display = 'none';
+  document.getElementById('formAgencia').style.display = 'none';
+
+  const titleEl = document.getElementById('checkoutFormTitle');
+
+  if (method === 'personal') {
+    titleEl.innerText = '🤝 DATOS PARA ENTREGA PERSONAL';
+    document.getElementById('formPersonalDelivery').style.display = 'block';
+    document.getElementById('pd_phone_wrap').style.display = 'block';
+    // Clear fields
+    ['pd_nombre','pd_apellido','pd_direccion','pd_telefono'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.value = '';
+    });
+  } else if (method === 'delivery') {
+    titleEl.innerText = '🛵 DATOS PARA DELIVERY';
+    document.getElementById('formPersonalDelivery').style.display = 'block';
+    document.getElementById('pd_phone_wrap').style.display = 'block';
+    ['pd_nombre','pd_apellido','pd_direccion','pd_telefono'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.value = '';
+    });
+  } else if (method === 'agencia') {
+    titleEl.innerText = '📦 DATOS PARA ENVÍO POR AGENCIA';
+    document.getElementById('formAgencia').style.display = 'block';
+    ['ag_nombre','ag_apellido','ag_cedula','ag_agencia','ag_ciudad','ag_telefono'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.value = '';
+    });
+  }
+
+  document.getElementById('checkoutNotes').value = '';
+}
+
+function submitCheckoutForm() {
+  const notes = document.getElementById('checkoutNotes')?.value.trim() || '';
+  let contactInfo = '';
+  let valid = true;
+
+  if (checkoutMethod === 'personal' || checkoutMethod === 'delivery') {
+    const nombre = document.getElementById('pd_nombre')?.value.trim() || '';
+    const apellido = document.getElementById('pd_apellido')?.value.trim() || '';
+    const direccion = document.getElementById('pd_direccion')?.value.trim() || '';
+    const telefono = document.getElementById('pd_telefono')?.value.trim() || '';
+    if (!nombre || !apellido || !direccion || !telefono) {
+      showToast("⚠️ Completa todos los campos requeridos");
+      return;
+    }
+    const tipo = checkoutMethod === 'personal' ? 'Entrega Personal' : 'Delivery Chilling Street';
+    contactInfo = `📋 *Tipo de entrega:* ${tipo}\n👤 *Nombre:* ${nombre} ${apellido}\n📍 *Dirección:* ${direccion}\n📞 *Teléfono:* ${telefono}`;
+  } else if (checkoutMethod === 'agencia') {
+    const nombre = document.getElementById('ag_nombre')?.value.trim() || '';
+    const apellido = document.getElementById('ag_apellido')?.value.trim() || '';
+    const cedula = document.getElementById('ag_cedula')?.value.trim() || '';
+    const agencia = document.getElementById('ag_agencia')?.value.trim() || '';
+    const ciudad = document.getElementById('ag_ciudad')?.value.trim() || '';
+    const telefono = document.getElementById('ag_telefono')?.value.trim() || '';
+    if (!nombre || !apellido || !cedula || !agencia || !ciudad || !telefono) {
+      showToast("⚠️ Completa todos los campos requeridos");
+      return;
+    }
+    contactInfo = `📋 *Tipo de entrega:* Envío por Agencia\n👤 *Nombre:* ${nombre} ${apellido}\n🪪 *Cédula:* ${cedula}\n🚚 *Agencia:* ${agencia}\n🏙️ *Ciudad destino:* ${ciudad}\n📞 *Teléfono:* ${telefono}`;
+  }
+
+  closeCheckoutModal();
+  _dispatchOrder(contactInfo, notes);
+}
+
+// Construye y envía el mensaje de WhatsApp
+function _dispatchOrder(contactInfo, extraNotes) {
+  const notesFromCart = document.getElementById('cartNotes')?.value.trim() || '';
+  const finalNotes = extraNotes || notesFromCart;
+
+  let itemList, total;
+
+  if (checkoutSource === 'direct' && currentModalProduct) {
+    // Compra directa desde modal (no usada aún, reservada)
+    const p = currentModalProduct;
+    const colorStr = selectedColorData ? selectedColorData.color : '';
+    const sizeStr = selectedSize || 'Única';
+    const spec = [colorStr && `Color: ${colorStr}`, sizeStr !== 'Única' && `Talla: ${sizeStr}`].filter(Boolean).join(', ');
+    itemList = `• ${p.title}${spec ? ` (${spec})` : ''} — $${p.price.toFixed(2)}`;
+    total = p.price;
+  } else {
+    // Desde carrito
+    total = cart.reduce((acc, p) => acc + (p.price * p.qty), 0);
+    itemList = cart.map(c => {
+      let spec = [];
+      if(c.color) spec.push(`Color: ${c.color}`);
+      if(c.size && c.size !== 'Única') spec.push(`Talla: ${c.size}`);
+      const specStr = spec.length ? ` (${spec.join(', ')})` : '';
+      return `• ${c.title}${specStr} x${c.qty} — $${(c.price * c.qty).toFixed(2)}`;
+    }).join('\n');
+  }
+
+  let msg = `⚡ *NUEVA ORDEN CHILLING STREET* ⚡\n\n`;
+  msg += itemList;
+  msg += `\n\n*TOTAL: $${total.toFixed(2)}*`;
+  if (contactInfo) msg += `\n\n${contactInfo}`;
+  if (finalNotes) msg += `\n\n📝 *Instrucciones:* ${finalNotes}`;
+
+  window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg));
+}
