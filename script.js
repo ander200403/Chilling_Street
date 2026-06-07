@@ -58,6 +58,7 @@ async function loadData() {
           const colorName = row[2] ? row[2].trim() : '';
           const tallasStr = row[3] ? row[3].trim() : '';
           const imgColorRaw = row[4] ? row[4].trim() : '';
+          const imgBackRaw = row[5] ? row[5].trim() : '';
           
           if (!idProdPadre) return;
           if (!variantsByProduct[idProdPadre]) variantsByProduct[idProdPadre] = [];
@@ -66,7 +67,8 @@ async function loadData() {
             idVar: idVar,
             color: colorName,
             tallas: tallasStr ? tallasStr.split(',').map(t => t.trim().toUpperCase()) : [],
-            imgColor: getStableImageUrl(imgColorRaw)
+            imgColor: getStableImageUrl(imgColorRaw),
+            imgBack: getStableImageUrl(imgBackRaw)
           });
         });
       }
@@ -110,6 +112,7 @@ async function loadData() {
             carouselRank: carouselMatch ? parseInt(carouselMatch[0], 10) : null,
             discountPercent: discountPercent,
             originalPrice: originalPrice,
+            imgBack: getStableImageUrl(cols[12] ? cols[12].trim() : ''),
             variants: variantsByProduct[idProd] || [] 
           };
         }).filter(p => p.title !== 'Sin título');
@@ -231,6 +234,49 @@ function renderCarousel() {
   `).join('');
 }
 
+// ── Toggle Frente / Dorsal ──
+let _showingBack = false;
+
+function _updateFlipToggle(frontSrc, backSrc) {
+  _showingBack = false;
+  const toggleBtn = document.getElementById('btnFlipView');
+  const modalImg = document.getElementById('modalImg');
+  if (!toggleBtn) return;
+
+  modalImg.src = frontSrc;
+
+  if (backSrc) {
+    toggleBtn.style.display = 'flex';
+    toggleBtn.setAttribute('data-front', frontSrc);
+    toggleBtn.setAttribute('data-back', backSrc);
+    toggleBtn.innerHTML = '↺ VER DORSAL';
+    toggleBtn.classList.remove('flipped');
+  } else {
+    toggleBtn.style.display = 'none';
+  }
+}
+
+function toggleFlipView() {
+  const toggleBtn = document.getElementById('btnFlipView');
+  const modalImg = document.getElementById('modalImg');
+  if (!toggleBtn) return;
+
+  const frontSrc = toggleBtn.getAttribute('data-front');
+  const backSrc = toggleBtn.getAttribute('data-back');
+
+  _showingBack = !_showingBack;
+
+  modalImg.style.opacity = '0';
+  modalImg.style.transition = 'opacity 0.25s ease';
+  setTimeout(() => {
+    modalImg.src = _showingBack ? backSrc : frontSrc;
+    modalImg.style.opacity = '1';
+  }, 200);
+
+  toggleBtn.innerHTML = _showingBack ? '↺ VER FRENTE' : '↺ VER DORSAL';
+  toggleBtn.classList.toggle('flipped', _showingBack);
+}
+
 // ── Lógica de Variantes en Modal ──
 function openModal(idStr) {
   const p = products.find(x => String(x.id) === String(idStr));
@@ -244,6 +290,9 @@ function openModal(idStr) {
   document.getElementById('modalTitle').innerText = p.title;
   document.getElementById('modalAuthor').innerText = p.brand;
   document.getElementById('modalDesc').innerText = p.desc;
+
+  // Reset flip toggle
+  _updateFlipToggle(p.img, p.imgBack || '');
   
   const mpEl = document.getElementById('modalPrice');
   if (p.originalPrice) {
@@ -304,6 +353,11 @@ function selectColor(index) {
   } else {
     document.getElementById('modalImg').src = currentModalProduct.img;
   }
+
+  // Update flip toggle with variant-specific back image (or product-level fallback)
+  const frontImg = selectedColorData.imgColor || currentModalProduct.img;
+  const backImg = selectedColorData.imgBack || currentModalProduct.imgBack || '';
+  _updateFlipToggle(frontImg, backImg);
 
   document.getElementById('sizeGroup').style.display = 'block';
   renderSizes(selectedColorData.tallas);
